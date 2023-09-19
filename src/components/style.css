@@ -1,0 +1,18 @@
+.control_pane{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: end;
+    width: 100%;
+
+
+justify-content: center;
+}
+.control_section{
+    margin-top:5vw;
+     height: 100%;
+}
+#charts{
+    /* background-color: aqua; */
+    width: 100vw;
+}
