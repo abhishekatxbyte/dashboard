@@ -1,12 +1,12 @@
 import * as XLSX from 'xlsx';
-import React from 'react'
+import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_DATA } from '../store/slice';
 
 const File = () => {
     const data = useSelector(state => state.data.data)
     const dataArray = useSelector(state => state.data.dataArray)
-
+    const inputRef = useRef();
     const dispatch = useDispatch()
     const handleFile = async (e) => {
         const files = e.target.files;
@@ -41,12 +41,26 @@ const File = () => {
 
     return (
         <div>
-            <input
+            <div className="container">
+                <div className="card">
+                    <h3>Upload Files</h3>
+                    <div className="drop_box">
+                        <header>
+                            <h4>Select File(s) here</h4>
+                        </header>
+                        <p>Files Supported: csv,excel</p>
+                        <input multiple type="file" accept=".csv,.xlsx" id="fileID" style={{ display: "none" }} onChange={e => handleFile(e)} ref={inputRef} />
+                        <button className="btn" onClick={() => inputRef.current.click()}>Choose File(s)</button>
+
+                    </div>
+                </div>
+            </div>
+            {/* <input
 
                 type="file"
                 multiple  // This attribute allows multiple file selection
                 onInput={(e) => handleFile(e)}
-            />
+            /> */}
         </div>
     )
 }
