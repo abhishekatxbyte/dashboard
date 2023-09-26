@@ -14,6 +14,17 @@ function MyVerticallyCenteredModal(props) {
     const dispatch = useDispatch()
     const [headerCondition, setHeaderCondition] = useState('')
     const [baseHeader, setBaseHeader] = useState('');
+    const [selectedOperator, setSelectedOperator] = useState('isEqual');
+
+    const [checkboxes, setCheckboxes] = useState([
+        { name: 'isEqual', label: 'is equal to' },
+        { name: 'isNotEqual', label: 'is not equal to' },
+        { name: 'isLessThan', label: 'less than' },
+        { name: 'isGreaterThan', label: 'greater than' },
+        { name: 'isGreaterThanOrEqual', label: 'greater than or equal' },
+        { name: 'isLessThanOrEqual', label: 'less than or equal' },
+    ]);
+
     const [secondHeader, setSecondHeader] = useState('');
     const handleBaseHeaderChange = (event) => {
         const newValue = event.target.value;
@@ -26,52 +37,42 @@ function MyVerticallyCenteredModal(props) {
     const handleConditionChange = (event) => {
         const newValue = event.target.value;
         setHeaderCondition(newValue);
+
+        if (newValue === 'HEADER_TO_HEADER') {
+            setCheckboxes([
+                { name: 'isEqual', label: 'is equal to' },
+                { name: 'isNotEqual', label: 'is not equal to' },
+                { name: 'isLessThan', label: 'less than' },
+                { name: 'isGreaterThan', label: 'greater than' },
+                { name: 'isGreaterThanOrEqual', label: 'greater than or equal' },
+                { name: 'isLessThanOrEqual', label: 'less than or equal' },
+            ]);
+        } else if (newValue === 'HEADER_TO_INPUT') {
+            setCheckboxes([
+                { name: 'isEqual', label: 'is equal to' },
+                { name: 'isNotEqual', label: 'is not equal to' },
+                { name: 'isLessThan', label: 'less than' },
+                { name: 'isGreaterThan', label: 'greater than' },
+                { name: 'isGreaterThanOrEqual', label: 'greater than or equal' },
+                { name: 'isLessThanOrEqual', label: 'less than or equal' },
+                { name: 'isContainsPhrase', label: 'contain the phrase' },
+            ]);
+        }
     };
+
+    console.log(checkboxes)
     const handleOperatorChange = (event) => {
         setSelectedOperator(event.target.value);
     };
     const handleCustomInputChange = (event) => {
         setCustomInput(event.target.value);
     };
-
-    // const [checkboxStates, setCheckboxStates] = useState({
-    //     isEqual: false,
-    //     isNotEqual: false,
-    //     isLessThan: false,
-    //     isGreaterThan: false,
-    //     isGreaterThanOrEqual: false,
-    //     isLessThanOrEqual: false,
-    // });
-
-    // const handleCheckboxChange = (checkboxName) => {
-    //     setCheckboxStates({
-    //         ...checkboxStates,
-    //         [checkboxName]: !checkboxStates[checkboxName],
-    //     });
-    // };
-    const [selectedOperator, setSelectedOperator] = useState('isEqual');
-
-    const checkboxes = [
-        { name: 'isEqual', label: 'is equal to' },
-        { name: 'isNotEqual', label: 'is not equal to' },
-        { name: 'isLessThan', label: 'less than' },
-        { name: 'isGreaterThan', label: 'greater than' },
-        { name: 'isGreaterThanOrEqual', label: 'greater than or equal' },
-        { name: 'isLessThanOrEqual', label: 'less than or equal' },
-    ];
-    console.log(baseHeader)
-    console.log(secondHeader)
-    console.log(selectedOperator)
     function filterData(data, xProperty, yProperty, condition, headerCondition, customInput) {
         if (headerCondition === "HEADER_TO_HEADER") {
-
             const filteredData = data.filter(item => {
-                console.log(item)
-                console.log(xProperty)
                 const xValue = item[xProperty];
                 const yValue = item[yProperty];
-                console.log(xValue)
-                console.log(yValue)
+
                 switch (condition) {
                     case 'isEqual':
                         return xValue === yValue;
@@ -91,15 +92,11 @@ function MyVerticallyCenteredModal(props) {
             });
             return filteredData;
         } else if (headerCondition === "HEADER_TO_INPUT") {
-            const filteredData = data.filter(item => {
-                const isNumber = customInput * 1
-                if (isNumber) {
-
-                    console.log(item);
-                    console.log(xProperty);
+            const isNumber = customInput * 1;
+            if (!isNaN(isNumber)) {
+                // Handle numeric comparisons when customInput is a valid number
+                const filteredData = data.filter(item => {
                     const xValue = item[xProperty];
-                    console.log(xValue);
-                    console.log(isNumber)
 
                     switch (condition) {
                         case 'isEqual':
@@ -114,19 +111,32 @@ function MyVerticallyCenteredModal(props) {
                             return xValue >= isNumber;
                         case 'isLessThanOrEqual':
                             return xValue <= isNumber;
-                        case 'isContainsPhrase':
-                            return xValue.includes(isNumber);
                         default:
                             return true; // If condition is not specified, return all data
                     }
-                } else {
-                    console.log(hi)
-                }
-            });
-            console.log(filteredData)
-            return filteredData;
+                });
+                return filteredData;
+            } else {
+                // Handle string comparisons when customInput is not a valid number
+                const filteredData = data.filter(item => {
+                    const xValue = item[xProperty];
+
+                    switch (condition) {
+                        case 'isEqual':
+                            return xValue === customInput;
+                        case 'isNotEqual':
+                            return xValue !== customInput;
+                        case 'isContainsPhrase':
+                            return typeof xValue === 'string' && xValue.includes(customInput);
+                        default:
+                            return true; // If condition is not specified, return all data
+                    }
+                });
+                return filteredData;
+            }
         } else {
-            return data; // Return the original data if headerCondition is not specified
+            // Invalid headerCondition, return the original data
+            return data;
         }
     }
 
