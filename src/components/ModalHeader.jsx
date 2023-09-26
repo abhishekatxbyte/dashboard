@@ -119,20 +119,22 @@ function MyVerticallyCenteredModal(props) {
             } else {
                 // Handle string comparisons when customInput is not a valid number
                 const filteredData = data.filter(item => {
-                    const xValue = item[xProperty];
+                    const xValue = item[xProperty].toLowerCase(); // Convert xValue to lowercase
+                    const customInputLowerCase = customInput.toLowerCase(); // Convert customInput to lowercase
 
                     switch (condition) {
                         case 'isEqual':
-                            return xValue === customInput;
+                            return xValue === customInputLowerCase;
                         case 'isNotEqual':
-                            return xValue !== customInput;
+                            return xValue !== customInputLowerCase;
                         case 'isContainsPhrase':
-                            return typeof xValue === 'string' && xValue.includes(customInput);
+                            return typeof xValue === 'string' && xValue.includes(customInputLowerCase);
                         default:
                             return true; // If condition is not specified, return all data
                     }
                 });
                 return filteredData;
+
             }
         } else {
             // Invalid headerCondition, return the original data
