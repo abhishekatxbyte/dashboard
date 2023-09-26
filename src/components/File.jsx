@@ -1,7 +1,8 @@
 import * as XLSX from 'xlsx';
 import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { ADD_DATA } from '../store/slice';
+import { ADD_DATA, SET_HEADERS } from '../store/slice';
+import ModalHeader from './ModalHeader';
 
 const File = () => {
     const data = useSelector(state => state.data.data)
@@ -33,14 +34,35 @@ const File = () => {
                 return obj;
             });
             dispatch(ADD_DATA(formattedData))
+            function extractHeaders(data) {
+                if (!data || data.length === 0) {
+                    return [];
+                }
+
+                // Get the keys (headers) from the first object in the array
+                const firstObject = data[0];
+                const headers = Object.keys(firstObject);
+
+                // Remove the "fileName" property from the headers
+                const filteredHeaders = headers.filter(header => header !== 'fileName');
+
+                return filteredHeaders;
+            }
+
+            // Usage example:
+            const headers = extractHeaders(formattedData);
+            console.log(headers)
+            dispatch(SET_HEADERS(headers))
+
             console.log(`Data from file ${i + 1}:`, formattedData);
         }
     }
+
     console.log(data)
     console.log(dataArray)
 
     return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div className="container">
                 <div className="card">
                     <h3>Upload Files</h3>
@@ -50,17 +72,15 @@ const File = () => {
                         </header>
                         <p>Files Supported: csv,excel</p>
                         <input multiple type="file" accept=".csv,.xlsx" id="fileID" style={{ display: "none" }} onChange={e => handleFile(e)} ref={inputRef} />
-                        <button className="btn" onClick={() => inputRef.current.click()}>Choose File(s)</button>
+                        <button className="btn-upload" onClick={() => inputRef.current.click()}>Choose File(s)</button>
 
                     </div>
                 </div>
-            </div>
-            {/* <input
 
-                type="file"
-                multiple  // This attribute allows multiple file selection
-                onInput={(e) => handleFile(e)}
-            /> */}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: "1em", width: '100%' }}>
+                {dataArray.length !== 0 ? <ModalHeader /> : <></>}
+            </div>
         </div>
     )
 }

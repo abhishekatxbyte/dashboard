@@ -25,6 +25,7 @@
     display: flex;
     justify-content: center;
     background-color: #fcfcfc;
+    gap: 2em;
 }
 
 .card {
@@ -47,6 +48,7 @@
     padding: 30px;
     display: flex;
     align-items: center;
+    gap: 0.1em;
     justify-content: center;
     flex-direction: column;
     border: 3px dotted #a3a3a3;
@@ -57,6 +59,7 @@
     font-size: 16px;
     font-weight: 400;
     color: #2e2e2e;
+    margin: 0;
 }
 
 .drop_box p {
@@ -66,20 +69,64 @@
     color: #a3a3a3;
 }
 
-.btn {
+.btn-upload {
     text-decoration: none;
-    background-color: #005af0 !important;
-    color: #ffffff !important;
-    padding: 10px 20px;
+    background-color: #005af0;
+    color: #ffffff;
+    padding: 3px 10px;
+    border-radius: 5pt;
     border: none;
+    margin-top: 0.5em;
     outline: none;
+    transition: all 0.5s;
+
 }
 
-.btn:hover {
+.btn-upload:hover {
     text-decoration: none;
-    background-color: #ffffff;
-    color: #005af0;
-    padding: 10px 20px;
-    border: none;
-    transition: all 0.5s;
+    scale: 1.2;
+    background-color: #003eaa;
+}
+
+/* modal-styles */
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.controllers {
+    justify-content: space-between;
+    display: flex;
+    width: 100%;
+    gap: 1em;
+    /* flex-wrap: wrap; */
+}
+
+.controller {
+    justify-content: space-between;
+    width: 100%;
+}
+
+.checkBoxs {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1vw;
+}
+
+.checkBoxs input {
+    zoom: 1.7;
+    cursor: pointer
+}
+
+.checkbox {
+    display: flex;
+    gap: 0.5em;
+}
+
+@media only screen and (max-width: 600px) {
+    .controllers {
+        flex-direction: column;
+    }
 }
