@@ -34,7 +34,7 @@ function ExtractedTable() {
     } else {
         // Handle the case where data is null or empty
         return (
-            <p>No data available.</p>
+            <></>
         );
     }
 }
